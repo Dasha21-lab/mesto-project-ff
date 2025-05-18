@@ -7,6 +7,8 @@
 // @todo: Функция удаления карточки
 
 // @todo: Вывести карточки на страницу
+import '../pages/index.css';
+import {initialCards} from './cards.js';
 
 function createCard(cardData, onDeleteClick) {
   const cardTemplate = document.querySelector('#card-template').content;
@@ -36,3 +38,25 @@ function showCards(cards) {
 
 showCards(initialCards);
 
+// убрать код
+const addButton = document.querySelector('.profile__add-button');
+const editButton = document.querySelector('.profile__edit-button');
+const imageButton = document.querySelector('.card__image');
+const popups = document.querySelectorAll('.popup');
+const closeButtons = document.querySelectorAll('.popup__close');
+
+function openPopup(popup) {
+
+}
+
+addButton.addEventListener('click', (evt) => {
+
+});
+
+editButton.addEventListener('click', (evt) => {
+ openPopup(editPopup);
+});
+
+imageButton.addEventListener('click', (evt) => {
+
+});
