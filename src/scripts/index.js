@@ -9,54 +9,93 @@
 // @todo: Вывести карточки на страницу
 import '../pages/index.css';
 import {initialCards} from './cards.js';
+import {createCard, handleLikeClick, deleteClick} from './card.js';
+import {openModal, closeModal} from './modal.js';
 
-function createCard(cardData, onDeleteClick) {
-  const cardTemplate = document.querySelector('#card-template').content;
-  const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
+const placesList = document.querySelector('.places__list');
+const popups = document.querySelectorAll('.popup');
+const popupButton = document.querySelectorAll('.popup__close');
+const editButton = document.querySelector('.profile__edit-button');
+const addButton = document.querySelector('.profile__add-button');
+const classProfileTitle = document.querySelector('.profile__title');
+const classProfileDescription = document.querySelector('.profile__description');
+const formElement = document.querySelector('.popup__form');
+const formNewPlace = document.querySelector('.popup__form[name="new-place"]');
 
-  cardElement.querySelector('.card__image').src = cardData.link;
-  cardElement.querySelector('.card__image').alt = cardData.name;
-  cardElement.querySelector('.card__title').textContent = cardData.name;
+function handleImageClick(link, name) {
+  const imagePopup = document.querySelector('.popup_type_image');
+  const popupImage = imagePopup.querySelector('.popup__image');
+  const popupCaption = imagePopup.querySelector('.popup__caption');
 
-  const deleteButton = cardElement.querySelector('.card__delete-button');
-  deleteButton.addEventListener('click', () => onDeleteClick(cardElement));
+  popupImage.src = link;
+  popupImage.alt = name;
+  popupCaption.textContent = name;
 
-  return cardElement;
-}
-
-function deleteClick(card) {
-  card.remove();
-}
+  openModal(imagePopup);
+};
 
 function showCards(cards) {
-  const placesList = document.querySelector('.places__list');
   cards.forEach(cardData => {
-    const cardElement = createCard(cardData, deleteClick);
+    const cardElement = createCard(cardData, deleteClick, handleLikeClick, handleImageClick);
     placesList.append(cardElement);
   });
-}
+};
 
 showCards(initialCards);
 
-// убрать код
-const addButton = document.querySelector('.profile__add-button');
-const editButton = document.querySelector('.profile__edit-button');
-const imageButton = document.querySelector('.card__image');
-const popups = document.querySelectorAll('.popup');
-const closeButtons = document.querySelectorAll('.popup__close');
+addButton.addEventListener('click', () => openModal(document.querySelector('.popup_type_new-card')));
 
-function openPopup(popup) {
+editButton.addEventListener('click', () => openModal(document.querySelector('.popup_type_edit')));
 
-}
-
-addButton.addEventListener('click', (evt) => {
-
+popupButton.forEach(closeButton => {
+  closeButton.addEventListener('click', () => {
+    const popup = closeButton.closest('.popup');
+    closeModal(popup);
+  }); 
 });
 
-editButton.addEventListener('click', (evt) => {
- openPopup(editPopup);
+popups.forEach(popup => {
+  popup.addEventListener('click', (evt) => {
+      if (evt.target === popup) {
+        closeModal(popup);
+      }
+  });
 });
 
-imageButton.addEventListener('click', (evt) => {
+const nameInput = formElement.querySelector('.popup__input_type_name');
+const jobInput = formElement.querySelector('.popup__input_type_description');
 
-});
+nameInput.value = classProfileTitle.textContent;
+jobInput.value = classProfileDescription.textContent;
+
+function handleFormSubmit(evt) {
+  evt.preventDefault();
+
+  classProfileTitle.textContent = nameInput.value;
+  classProfileDescription.textContent = jobInput.value;
+
+  closeModal(document.querySelector('.popup_is-opened'));
+};
+
+formElement.addEventListener('submit', handleFormSubmit);
+
+const nameCard = formNewPlace.querySelector('.popup__input_type_card-name');
+const linkCard = formNewPlace.querySelector('.popup__input_type_url');
+ 
+function handleCardSubmit(evt) {
+  evt.preventDefault();
+
+  const newCard = {
+    name: nameCard.value, 
+    link: linkCard.value
+  };
+
+  const returnedCard = createCard(newCard, deleteClick, handleLikeClick, handleImageClick);
+  placesList.prepend(returnedCard);
+
+  formNewPlace.reset();
+
+  closeModal(document.querySelector('.popup_is-opened'));
+};
+
+formNewPlace.addEventListener('submit', handleCardSubmit);
