@@ -6,8 +6,6 @@ export function openModal(popupElement) {
 
 export function closeModal(popupElement) {
   popupElement.classList.remove('popup_is-opened');
-
-  document.addEventListener('keydown', handleEscapeKey);
 };
 
 function handleEscapeKey(evt) {

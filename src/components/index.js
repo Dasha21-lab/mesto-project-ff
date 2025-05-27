@@ -14,22 +14,27 @@ import {openModal, closeModal} from './modal.js';
 
 const placesList = document.querySelector('.places__list');
 const popups = document.querySelectorAll('.popup');
-const popupButton = document.querySelectorAll('.popup__close');
+const popupButtons = document.querySelectorAll('.popup__close');
+const formEditProfile = document.querySelector('.popup__form[name="edit-profile"]');
+const formNewPlace = document.querySelector('.popup__form[name="new-place"]');
+const imagePopup = document.querySelector('.popup_type_image');
+const popupImage = imagePopup.querySelector('.popup__image');
+const popupImageCaption = imagePopup.querySelector('.popup__caption');
+const popupNewCard = document.querySelector('.popup_type_new-card');
+const popupEdit = document.querySelector('.popup_type_edit');
+const nameInput = formEditProfile.querySelector('.popup__input_type_name');
+const jobInput = formEditProfile.querySelector('.popup__input_type_description');
+const inputNameFormNewPlace = formNewPlace.querySelector('.popup__input_type_card-name');
+const inputLinkFormNewPlace = formNewPlace.querySelector('.popup__input_type_url');
 const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const classProfileTitle = document.querySelector('.profile__title');
 const classProfileDescription = document.querySelector('.profile__description');
-const formElement = document.querySelector('.popup__form');
-const formNewPlace = document.querySelector('.popup__form[name="new-place"]');
 
 function handleImageClick(link, name) {
-  const imagePopup = document.querySelector('.popup_type_image');
-  const popupImage = imagePopup.querySelector('.popup__image');
-  const popupCaption = imagePopup.querySelector('.popup__caption');
-
   popupImage.src = link;
   popupImage.alt = name;
-  popupCaption.textContent = name;
+  popupImageCaption.textContent = name;
 
   openModal(imagePopup);
 };
@@ -43,11 +48,18 @@ function showCards(cards) {
 
 showCards(initialCards);
 
-addButton.addEventListener('click', () => openModal(document.querySelector('.popup_type_new-card')));
+addButton.addEventListener('click', () => {
+  openModal(popupNewCard);
+});
+  
+editButton.addEventListener('click', () => {
+  nameInput.value = classProfileTitle.textContent;
+  jobInput.value = classProfileDescription.textContent;
+  
+  openModal(popupEdit);
+});
 
-editButton.addEventListener('click', () => openModal(document.querySelector('.popup_type_edit')));
-
-popupButton.forEach(closeButton => {
+popupButtons.forEach(closeButton => {
   closeButton.addEventListener('click', () => {
     const popup = closeButton.closest('.popup');
     closeModal(popup);
@@ -58,36 +70,27 @@ popups.forEach(popup => {
   popup.addEventListener('click', (evt) => {
       if (evt.target === popup) {
         closeModal(popup);
-      }
+      };
   });
 });
 
-const nameInput = formElement.querySelector('.popup__input_type_name');
-const jobInput = formElement.querySelector('.popup__input_type_description');
-
-nameInput.value = classProfileTitle.textContent;
-jobInput.value = classProfileDescription.textContent;
-
-function handleFormSubmit(evt) {
+function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   classProfileTitle.textContent = nameInput.value;
   classProfileDescription.textContent = jobInput.value;
-
-  closeModal(document.querySelector('.popup_is-opened'));
+  
+  closeModal(popupEdit);
 };
 
-formElement.addEventListener('submit', handleFormSubmit);
+formEditProfile.addEventListener('submit', handleProfileFormSubmit);
 
-const nameCard = formNewPlace.querySelector('.popup__input_type_card-name');
-const linkCard = formNewPlace.querySelector('.popup__input_type_url');
- 
 function handleCardSubmit(evt) {
   evt.preventDefault();
 
   const newCard = {
-    name: nameCard.value, 
-    link: linkCard.value
+    name: inputNameFormNewPlace.value,
+    link: inputLinkFormNewPlace.value
   };
 
   const returnedCard = createCard(newCard, deleteClick, handleLikeClick, handleImageClick);
@@ -95,7 +98,7 @@ function handleCardSubmit(evt) {
 
   formNewPlace.reset();
 
-  closeModal(document.querySelector('.popup_is-opened'));
+  closeModal(popupNewCard);
 };
 
 formNewPlace.addEventListener('submit', handleCardSubmit);
