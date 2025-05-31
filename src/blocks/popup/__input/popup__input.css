@@ -20,3 +20,18 @@
     line-height: 15px;
   }
 }
+
+.form__input_type_error {
+  border-bottom-color: #FF0000;
+}
+
+.form__input-error {
+  font-weight: 400;
+  font-size: 12px;
+  color: #FF0000;
+  line-height: 100%;
+}
+
+.form__input-error_active {
+  display: block;
+}

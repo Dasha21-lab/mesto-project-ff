@@ -102,3 +102,72 @@ function handleCardSubmit(evt) {
 };
 
 formNewPlace.addEventListener('submit', handleCardSubmit);
+
+// 7 спринт
+
+// const nameError = document.querySelector(`.${nameInput.id}-error`);
+// const descriptionError = document.querySelector(`.${jobInput.id}-error`);
+
+const formPopup = document.querySelector('.popup__form');
+// const popupInput = document.querySelector('.popup__input');
+const buttonPopupSave = formPopup.querySelector('.popup__button');
+
+const showInputError = (popupInput, errorMessage) => {
+  const formError = formPopup.querySelector(`.${popupInput.id}-error`);
+  popupInput.classList.add('form__input_type_error');
+  formError.textContent = errorMessage;
+  formError.classList.add('form__input-error_active');
+};
+
+const hideInputError = (popupInput) => {
+  const formError = formPopup.querySelector(`.${popupInput.id}-error`);
+  popupInput.classList.remove('form__input_type_error');
+  formError.classList.remove('form__input-error_active');
+  formError.textContent = '';
+};
+
+const isValid = (popupInput) => {
+  if (!popupInput.validity.valid) {
+    showInputError(popupInput, popupInput.validationMessage);
+  } else {
+    hideInputError(popupInput);
+  }
+};
+
+const setEventListeners = (formPopup) => {
+  const inputList = Array.from(formPopup.querySelectorAll('.popup__input'));
+
+  inputList.forEach((popupInput) => {
+    popupInput.addEventListener('input', () => {
+      isValid(popupInput);
+
+       toggleButtonState(inputList, buttonPopupSave);
+    });
+  });
+}; 
+
+const enableValidation = () => {
+  const formList = Array.from(document.querySelectorAll('.popup__form'));
+
+  formList.forEach((formPopup) => {
+    setEventListeners(formPopup);
+  });
+};
+
+enableValidation();
+
+const hasInvalidInput = (inputList) => {
+  return inputList.some((popupInput) => {
+    return !popupInput.validity.valid;
+  })
+};
+
+const toggleButtonState = (inputList, buttonPopupSave) => {
+  if (hasInvalidInput(inputList)) {
+    buttonPopupSave.disabled = true;
+    buttonPopupSave.classList.add('popup__button-inactive');
+  } else {
+   buttonPopupSave.disabled = false;
+   buttonPopupSave.classList.remove('popup__button-inactive');
+  }
+}; 
