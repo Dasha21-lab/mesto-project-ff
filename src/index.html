@@ -46,7 +46,8 @@
           placeholder="Имя" 
           minlength="2" 
           maxlength="40"
-          pattern="/^[a-zA-Zа-яА-Я\s-]*$/"
+          pattern="[A-Za-zА-Яа-яЁё\- ]+"
+          data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
           required
         >
         <span class="popup__input_error name-input-error"></span>
@@ -58,7 +59,8 @@
           placeholder="Занятие" 
           minlength="2" 
           maxlength="200"
-          pattern="/^[a-zA-Zа-яА-Я\s-]*$/"
+          pattern="[A-Za-zА-Яа-яЁё\- ]+"
+          data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
           required
         >
         <span class="popup__input_error description-input-error"></span>
@@ -73,21 +75,22 @@
       <form class="popup__form" name="new-place" novalidate>
         <input 
           id="place-name-input"
-          type="text" 
-          name="place-name" 
-          class="popup__input popup__input_type_card-name" 
+          type="text"
+          name="place-name"
+          class="popup__input popup__input_type_card-name"
           placeholder="Название"
-          minlength="2" 
+          minlength="2"
           maxlength="30"
-          pattern="/^[a-zA-Zа-яА-Я\s-]*$/" 
+          pattern="[A-Za-zА-Яа-яЁё\- ]+"
+          data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы"
           required
         >
         <span class="popup__input_error place-name-input-error"></span>
         <input 
           id="link-input"
-          type="url" 
-          name="link" 
-          class="popup__input popup__input_type_url" 
+          type="url"
+          name="link"
+          class="popup__input popup__input_type_url"
           placeholder="Ссылка на картинку"
           required
         >

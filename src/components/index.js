@@ -11,7 +11,8 @@ import '../pages/index.css';
 import {initialCards} from './cards.js';
 import {createCard, handleLikeClick, deleteClick} from './card.js';
 import {openModal, closeModal} from './modal.js';
-import {enableValidation, clearValidation} from './validation.js'
+import {enableValidation, clearValidation} from './validation.js';
+import {getUserInfo, getCard} from './api.js';
 
 const placesList = document.querySelector('.places__list');
 const popups = document.querySelectorAll('.popup');
@@ -31,6 +32,8 @@ const editButton = document.querySelector('.profile__edit-button');
 const addButton = document.querySelector('.profile__add-button');
 const classProfileTitle = document.querySelector('.profile__title');
 const classProfileDescription = document.querySelector('.profile__description');
+const classProfileImage = document.querySelector('.profile__image');
+
 
 const validationConfig = {
     formSelector: '.popup__form',
@@ -117,6 +120,23 @@ function handleCardSubmit(evt) {
 
 formNewPlace.addEventListener('submit', handleCardSubmit);
 
-// 7 спринт
-// Включение валидации
 enableValidation(validationConfig);
+
+getUserInfo()
+  .then((data) => {
+  classProfileTitle.textContent = data.name;
+  classProfileDescription.textContent = data.about;
+  classProfileImage.style.backgroundImage = `url(${data.avatar})`;
+  })
+ .catch((error) => {
+    console.error('Ошибка при получении данных пользователя:', error);
+  });
+
+getCard()
+  .then((data) =>{
+console.log(data)
+  })
+  .catch((error) => {
+    console.error('Ошибка при получении данных пользователя:', error);
+  });
+ 

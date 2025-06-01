@@ -14,9 +14,9 @@ const hideInputError = (formPopup, popupInput, validationConfig) => {
 
 const isValid = (formPopup, popupInput, validationConfig) => {
    if (popupInput.validity.patternMismatch) {
-      popupInput.setCustomValidity("Разрешены только латинские буквы.");
+      popupInput.setCustomValidity(popupInput.dataset.errorMessage);
   } else {
-    popupInput.setCustomValidity("");
+      popupInput.setCustomValidity("");
   }
   if (!popupInput.validity.valid) {
     showInputError(formPopup, popupInput, validationConfig, popupInput.validationMessage);
