@@ -25,3 +25,5 @@ export function handleLikeClick(evt) {
 export function deleteClick(card) {
   card.remove();
 };
+
+
