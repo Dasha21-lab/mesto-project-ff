@@ -13,7 +13,11 @@ export function createCard(cardData, onDeleteClick, onLikeClick, onImageClick) {
   const likeButton = cardElement.querySelector('.card__like-button');
   likeButton.addEventListener('click', onLikeClick);
 
+  const cardLikeCount = cardElement.querySelector('.card__like-count');
+  cardLikeCount.textContent = cardData.likes.length; 
+
   cardImage.addEventListener('click', () => onImageClick(cardData.link, cardData.name));
+
  
   return cardElement;
 };

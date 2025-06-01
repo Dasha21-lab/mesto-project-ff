@@ -12,7 +12,7 @@ import {initialCards} from './cards.js';
 import {createCard, handleLikeClick, deleteClick} from './card.js';
 import {openModal, closeModal} from './modal.js';
 import {enableValidation, clearValidation} from './validation.js';
-import {getUserInfo, getCard} from './api.js';
+import {updateEditProfile, getUserInfo, getCard, addNewCard} from './api.js';
 
 const placesList = document.querySelector('.places__list');
 const popups = document.querySelectorAll('.popup');
@@ -52,14 +52,16 @@ function handleImageClick(link, name) {
   openModal(imagePopup);
 };
 
+/*
 function showCards(cards) {
   cards.forEach(cardData => {
     const cardElement = createCard(cardData, deleteClick, handleLikeClick, handleImageClick);
     placesList.append(cardElement);
   });
 };
+*/
 
-showCards(initialCards);
+//showCards(initialCards);
 
 addButton.addEventListener('click', () => {
   clearValidation(formNewPlace, validationConfig);
@@ -94,9 +96,15 @@ popups.forEach(popup => {
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
-  classProfileTitle.textContent = nameInput.value;
-  classProfileDescription.textContent = jobInput.value;
-  
+  updateEditProfile(nameInput.value, jobInput.value)
+  .then(data => {  
+    classProfileTitle.textContent = data.name;
+    classProfileDescription.textContent = data.about;
+  })
+    .catch(error => {
+      console.error('There was a problem with the update operation:', error);
+    });
+
   closeModal(popupEdit);
 };
 
@@ -109,34 +117,83 @@ function handleCardSubmit(evt) {
     name: inputNameFormNewPlace.value,
     link: inputLinkFormNewPlace.value
   };
-
+addNewCard(newCard.name, newCard.link)
+.then (() => {
   const returnedCard = createCard(newCard, deleteClick, handleLikeClick, handleImageClick);
   placesList.prepend(returnedCard);
 
   formNewPlace.reset();
 
   closeModal(popupNewCard);
+})
 };
 
 formNewPlace.addEventListener('submit', handleCardSubmit);
 
 enableValidation(validationConfig);
 
+Promise.all([getUserInfo(), getCard()]).then(([userInfo, cards]) => {
+    classProfileTitle.textContent = userInfo.name;
+    classProfileDescription.textContent = userInfo.about;
+    classProfileImage.style.backgroundImage = `url(${userInfo.avatar})`;
+
+    cards.forEach(card => {
+      // TODO: вернуть для проверки по ID
+        const cardElement = createCard(card, deleteClick, handleLikeClick, handleImageClick);
+        placesList.append(cardElement);
+
+      if (card.owner._id !== userInfo._id) {
+      const deleteButton = cardElement.querySelector('.card__delete-button');
+      deleteButton.addEventListener('click', () => onDeleteClick(cardElement));
+      deleteButton.style.display = 'none';
+      }    
+    });
+})
+
+/*
 getUserInfo()
   .then((data) => {
-  classProfileTitle.textContent = data.name;
-  classProfileDescription.textContent = data.about;
-  classProfileImage.style.backgroundImage = `url(${data.avatar})`;
+    classProfileTitle.textContent = data.name;
+    classProfileDescription.textContent = data.about;
+    classProfileImage.style.backgroundImage = `url(${data.avatar})`;
   })
  .catch((error) => {
     console.error('Ошибка при получении данных пользователя:', error);
   });
 
 getCard()
-  .then((data) =>{
-console.log(data)
+  .then((data) => {
+    showCards(data);
+    //console.log(data)
   })
   .catch((error) => {
     console.error('Ошибка при получении данных пользователя:', error);
   });
- 
+*/
+/*
+updateEditProfile()
+  .then(data => {
+    console.log(data);
+  })
+    .catch(error => {
+      console.error('There was a problem with the update operation:', error);
+    });
+    */
+
+// УДАЛЕНИЕ 
+
+const popupConfirmDelete = document.querySelector('.popup_type_confirm-delete');
+const popupButtonDelete = document.querySelector('.popup__button_confirm-delete');
+const deleteButton = document.querySelector('.card__delete-button');
+
+function openPopupDelete(evt) {
+ evt.preventDefault();
+
+
+}
+
+deleteButton.addEventListener('click', () => {
+  openModal(popupConfirmDelete);
+});
+
+popupConfirmDelete.addEventListener('submit', openPopupDelete);
