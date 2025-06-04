@@ -1,67 +1,130 @@
-const tokenAuthorization = 'd2a4abef-92fa-477b-aa27-386ad8407ec3';
-const BASE_URL = 'https://nomoreparties.co/v1/wff-cohort-39';
+const config = {
+  baseUrl: 'https://nomoreparties.co/v1/wff-cohort-39',
+  headers: {
+    authorization: 'd2a4abef-92fa-477b-aa27-386ad8407ec3',
+    'Content-Type': 'application/json'
+  }
+};
 
 export const getUserInfo = () => {
-    return fetch(`${BASE_URL}/users/me`, {
+    return fetch(`${config.baseUrl}/users/me`, {
         method: 'GET',
-        headers: {
-            authorization: tokenAuthorization,
-            'Content-Type': 'application/json',
-        }
+        headers: config.headers
     })
-.then((res) => {
-    return res.json();
-})
-}
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
 
 export const getCard = () => {
-    return fetch(`${BASE_URL}/cards`, {
+    return fetch(`${config.baseUrl}/cards`, {
         method: 'GET',
-        headers: {
-            authorization: tokenAuthorization,
-            'Content-Type': 'application/json',
-        }
+        headers: config.headers
     })
-.then((res) => {
-    return res.json();
-})
-}
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
 
 export const updateEditProfile = (name, about) => {
-    return fetch(`${BASE_URL}/users/me`, {
+    return fetch(`${config.baseUrl}/users/me`, {
         method: 'PATCH',
-        headers: {
-            authorization: tokenAuthorization,
-            'Content-Type': 'application/json',
-        },
+        headers: config.headers,
         body: JSON.stringify({
             name: name,
             about: about
         })
     })
-.then((res) => {
-    return res.json();
-})
-}
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
 
 export const addNewCard = (name, link) => {
-    return fetch(`${BASE_URL}/cards`, {
+    return fetch(`${config.baseUrl}/cards`, {
         method: 'POST',
-        headers: {
-            authorization: tokenAuthorization,
-            'Content-Type': 'application/json',
-        },
+        headers: config.headers,
         body: JSON.stringify({
             name: name,
             link: link
         })
     })
-.then((res) => {
-    return res.json();
-})
-}
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
 
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
 
+export const deleteCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/${cardId}`, {
+        method: 'DELETE',
+        headers: config.headers
+    })
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
 
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
 
+export const createLikeCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'PUT',
+        headers: config.headers
+    })
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
 
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
+
+export const deleteLikeCard = (cardId) => {
+    return fetch(`${config.baseUrl}/cards/likes/${cardId}`, {
+        method: 'DELETE',
+        headers: config.headers
+    })
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};
+
+export const updateProfileAvatar = (avatar) => {
+    return fetch(`${config.baseUrl}/users/me/avatar`, {
+        method: 'PATCH',
+        headers: config.headers,
+        body: JSON.stringify({
+            avatar: avatar
+        })
+    })
+        .then((res) => {
+            if (res.ok) {
+                return res.json();
+            }
+
+            return Promise.reject(`Ошибка: ${res.status}`);
+        });
+};

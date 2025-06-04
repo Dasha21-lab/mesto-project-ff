@@ -13,16 +13,17 @@ const hideInputError = (formPopup, popupInput, validationConfig) => {
 };
 
 const isValid = (formPopup, popupInput, validationConfig) => {
-   if (popupInput.validity.patternMismatch) {
-      popupInput.setCustomValidity(popupInput.dataset.errorMessage);
+  if (popupInput.validity.patternMismatch) {
+    popupInput.setCustomValidity(popupInput.dataset.errorMessage);
   } else {
-      popupInput.setCustomValidity("");
-  }
+    popupInput.setCustomValidity("");
+  };
+
   if (!popupInput.validity.valid) {
     showInputError(formPopup, popupInput, validationConfig, popupInput.validationMessage);
   } else {
     hideInputError(formPopup, popupInput, validationConfig);
-  }
+  };
 };
 
 const setEventListeners = (formPopup, validationConfig) => {
@@ -41,7 +42,7 @@ const setEventListeners = (formPopup, validationConfig) => {
 const hasInvalidInput = (inputList) => {
   return inputList.some((popupInput) => {
     return !popupInput.validity.valid;
-  })
+  });
 };
 
 const toggleButtonState = (inputList, buttonPopupSave, validationConfig) => {
@@ -51,7 +52,7 @@ const toggleButtonState = (inputList, buttonPopupSave, validationConfig) => {
   } else {
    buttonPopupSave.disabled = false;
    buttonPopupSave.classList.remove(validationConfig.inactiveButtonClass);
-  }
+  };
 };
 
 export function enableValidation (validationConfig) {

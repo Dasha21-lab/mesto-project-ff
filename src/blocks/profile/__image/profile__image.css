@@ -7,6 +7,7 @@
   background-size: cover;
   background-position: center;
   margin: 0 29px 0 0;
+  cursor: pointer;
 }
 
 @media screen and (max-width: 740px) {
@@ -19,4 +20,24 @@
   .profile__image {
     margin-right: 0;
   }
+}
+
+.profile__edit-icon {
+  background: url('/src/images/edit-icon.svg');
+  inline-size: 120px;
+  block-size: 120px;
+  background-color: rgba(0, 0, 0, 0.8);
+  position: absolute;
+  font-family: "Inter", Arial, sans-serif;
+  opacity: 0;
+  transition:
+    visibility 0.3s,
+    opacity 0.6s;
+  background-repeat: no-repeat;
+  background-size: 26px;
+  background-position: center;
+}
+
+.profile__image:hover .profile__edit-icon {
+  opacity: 1;
 }
