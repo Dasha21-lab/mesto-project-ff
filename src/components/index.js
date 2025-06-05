@@ -37,6 +37,8 @@ const popupConfirmDelete = document.querySelector('.popup_type_confirm-delete');
 const popupButtonDelete = document.querySelector('.popup__button_confirm-delete');
 const popupAvatar = document.querySelector('.popup_type_avatar');
 const inputAvatar = document.querySelector('.popup__input_type_avatar');
+const loadingText = 'Сохранение...';
+const initialText = 'Сохранить';
 
 const validationConfig = {
   formSelector: '.popup__form',
@@ -46,6 +48,8 @@ const validationConfig = {
   inputErrorClass: 'popup__input_type_error',
   errorClass: 'popup__error_visible'
 };
+
+let globalCardHandlerObj;
 
 function handleImageClick(link, name) {
   popupImage.src = link;
@@ -87,16 +91,25 @@ popups.forEach(popup => {
   });
 });
 
+function handleLoadingState(submitButton, isLoading) {
+  if (isLoading) {
+      submitButton.textContent = loadingText;
+    } else {
+      submitButton.textContent = initialText;
+    };
+};
+
 function handleProfileFormSubmit(evt) {
   evt.preventDefault();
 
   const submitButton = formEditProfile.querySelector('.popup__button');
-  submitButton.textContent = 'Сохранение...';
+  handleLoadingState(submitButton, true);
 
   updateEditProfile(nameInput.value, jobInput.value)
-    .then((data) => {  
+    .then((data) => {
       classProfileTitle.textContent = data.name;
       classProfileDescription.textContent = data.about;
+      closeModal(popupEdit);
     })
     
     .catch((err) => {
@@ -104,10 +117,8 @@ function handleProfileFormSubmit(evt) {
     })
 
     .finally(() => {
-      submitButton.textContent = 'Сохранить';
+      handleLoadingState(submitButton, false);
     });
-
-  closeModal(popupEdit);
 };
 
 formEditProfile.addEventListener('submit', handleProfileFormSubmit);
@@ -116,7 +127,7 @@ function handleCardSubmit(evt) {
   evt.preventDefault();
 
   const submitButton = formNewPlace.querySelector('.popup__button');
-  submitButton.textContent = 'Сохранение...';
+  handleLoadingState(submitButton, true);
 
   const newCard = {
     name: inputNameFormNewPlace.value,
@@ -138,7 +149,7 @@ function handleCardSubmit(evt) {
     })
 
     .finally(() => {
-      submitButton.textContent = 'Сохранить';
+      handleLoadingState(submitButton, false);
     });
 };
 
@@ -169,22 +180,25 @@ Promise.all([getUserInfo(), getCard()])
     console.log('There was a problem with the update operation:', err);
   });
 
-function deleteClick(card) {
+popupButtonDelete.addEventListener('click', () => handleDeleteClick(globalCardHandlerObj));
+  
+function deleteClick(cardObj) {
+  globalCardHandlerObj = cardObj;
   openModal(popupConfirmDelete);
-
-  popupButtonDelete.addEventListener('click', () => handleDeleteClick(card));
 };
 
-function handleDeleteClick(card) {
-  deleteCard(card.dataset.cardId)
+function handleDeleteClick(cardObj) {
+  if (cardObj) {
+    deleteCard(cardObj.id)
     .then(() => {
       closeModal(popupConfirmDelete);
-      card.remove();
+      cardObj.element.remove();
     })
     
     .catch((err) => {
       console.log('There was a problem with the update operation:', err);
     });
+  };
 };
 
 classProfileImage.addEventListener('click', () => {
@@ -199,7 +213,7 @@ function handleAvatarFormSubmit(evt) {
   evt.preventDefault();
 
   const submitButton = popupAvatar.querySelector('.popup__button');
-  submitButton.textContent = 'Сохранение...';
+  handleLoadingState(submitButton, true);
 
   const avatar = inputAvatar.value;
 
@@ -215,7 +229,7 @@ function handleAvatarFormSubmit(evt) {
     })
 
    .finally(() => {
-      submitButton.textContent = 'Сохранить';
+      handleLoadingState(submitButton, false);
     });
 };
 
