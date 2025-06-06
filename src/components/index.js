@@ -136,7 +136,7 @@ function handleCardSubmit(evt) {
 
   addNewCard(newCard.name, newCard.link)
     .then ((data) => {
-      const returnedCard = createCard(data, deleteClick, handleLikeClick, handleImageClick);
+      const returnedCard = createCard(data.owner._id, data, deleteClick, handleLikeClick, handleImageClick);
       placesList.prepend(returnedCard);
 
       formNewPlace.reset();
@@ -165,11 +165,12 @@ Promise.all([getUserInfo(), getCard()])
 
     cards.forEach(card => {
       let cardElement;
+      const userId = userInfo._id;
 
-      if (card.owner._id === userInfo._id) {
-        cardElement = createCard(card, deleteClick, handleLikeClick, handleImageClick);
+      if (card.owner._id === userId) {
+        cardElement = createCard(userId, card, deleteClick, handleLikeClick, handleImageClick);
       } else {
-        cardElement = createCard(card, undefined, handleLikeClick, handleImageClick);
+        cardElement = createCard(userId, card, undefined, handleLikeClick, handleImageClick);
       };
 
       placesList.append(cardElement);

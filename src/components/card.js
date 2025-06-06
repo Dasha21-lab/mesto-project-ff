@@ -2,7 +2,7 @@ import {createLikeCard, deleteLikeCard} from './api.js';
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-export function createCard(cardData, onDeleteClick, onLikeClick, onImageClick) {
+export function createCard(currentUserId, cardData, onDeleteClick, onLikeClick, onImageClick) {
   const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
 
   const cardImage = cardElement.querySelector('.card__image');
@@ -23,11 +23,18 @@ export function createCard(cardData, onDeleteClick, onLikeClick, onImageClick) {
     deleteButton.style.display = 'none';
   };
 
+  const likes = cardData.likes;
   const likeButton = cardElement.querySelector('.card__like-button');
   likeButton.addEventListener('click', (evt) => onLikeClick(evt, cardObj));
+  
+  likes.forEach((like) => {
+    if (like._id === currentUserId) {
+      likeButton.classList.toggle('card__like-button_is-active');
+    };
+  });
 
   const cardLikeCount = cardElement.querySelector('.card__like-count');
-  cardLikeCount.textContent = cardData.likes.length; 
+  cardLikeCount.textContent = likes.length; 
 
   cardImage.addEventListener('click', () => onImageClick(cardData.link, cardData.name));
 
